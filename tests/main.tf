@@ -1,12 +1,16 @@
 module "redis_cluster" {
-  source  = "terraform-google-modules/memorystore/google//modules/redis-cluster"
-  version = "~> 9.0"
+  source = "../"
+  # version = "~> 9.0"
 
-  name      = "utk-test-redis-cluster"
-  project   = var.project_id
-  region    = "us-central1"
-  network   = ["projects/${var.project_id}/global/networks/${var.network_name}"]
-  node_type = "REDIS_STANDARD_SMALL"
+  name                    = var.name
+  project                 = var.project_id
+  region                  = var.region
+  network                 = ["projects/${var.project_id}/global/networks/${var.network_name}"]
+  node_type               = var.node_type
+  shard_count             = var.shard_count
+  replica_count           = var.replica_count
+  transit_encryption_mode = var.transit_encryption_mode
+  authorization_mode      = var.authorization_mode
 
   service_connection_policies = {
     test-net-redis-cluster-scp = {
@@ -18,8 +22,7 @@ module "redis_cluster" {
       ]
     }
   }
-
   redis_configs = {
-    maxmemory-policy = "volatile-ttl"
+    maxmemory-policy = var.maxmemory-policy
   }
 }
